@@ -44,9 +44,6 @@ class Perfil:
         self.__seguidos.append(seguidor)
     
     def add_tweet(self, mensagem:str):
-        if (len(mensagem) < 1) or (len(mensagem) > 40):
-            raise MFPException(self.__usuario)
-        
         tweet = Tweet(self.__usuario, mensagem)
         self.__tweets.append(tweet)
     
@@ -59,8 +56,11 @@ class Perfil:
                 return tweet
     
     def get_timeline(self):
-        pass
+        tweets_timelines = [perfil.get_tweets() for perfil in self.__seguidos] + self.__tweets
+        tweets_timelines.sort(key=lambda x: x.get_data_postagem())
 
+        return tweets_timelines
+    
     def set_usuario(self, usuario):
         self.__usuario = usuario
     
@@ -78,7 +78,7 @@ class Perfil:
     
     def get_numero_seguidos(self):
         return len(self.__seguidos)
-
+    
 class PessoaFisica(Perfil):
     def __init__(self, usuario:str, cpf:str):
         super(usuario)
@@ -128,33 +128,77 @@ class MyTwitter:
         self.__repositorio = RepositorioUsuarios()
 
     def criar_perfil(self,usuario:Perfil):
-        self.__repositorio.cadastrar(usuario)
-        
-    def cancelar_perfil(self, usuario:Perfil):
         nome_usuario = usuario.get_usuario()
         usuario_bd = self.__repositorio.buscar(nome_usuario)
-        # CONTINUAR NO RESTO DA IMPLEMENTAÇÃO
+
+        if usuario_bd is not None:
+            raise PEException(nome_usuario)
+        
+        self.__repositorio.cadastrar(usuario)
+        
+    def cancelar_perfil(self, nome_usuario:str):
+        usuario = self.__repositorio.buscar(nome_usuario) # usuario dentro do repositorio
+
+        if usuario is None:
+            raise PIException(nome_usuario)
+        
+        if usuario.is_ativo() == False:
+            raise PDException(nome_usuario)
+
+        usuario.set_ativo(False)
 
     def tweetar(self,nome_usuario:str, mensagem: str):
         usuario = self.__repositorio.buscar(nome_usuario)
         if usuario is None:
             raise PIException(nome_usuario)
         
+        if (len(mensagem) < 1) or (len(mensagem) > 40):
+            raise MFPException(nome_usuario)
+        
         usuario.add_tweet(mensagem)
     
     def timeline(self,nome_usuario:str):
         usuario = self.__repositorio.buscar(nome_usuario)
-        # CONTINUAR NO RESTO DA IMPLEMENTAÇÃO
+        if usuario is None:
+            raise PIException(nome_usuario)
+        
+        if usuario.is_ativo() == False:
+            raise PDException(nome_usuario)    
+        
+        return usuario.get_timeline()
     
     def tweets(self, nome_usuario:str):
         usuario = self.__repositorio.buscar(nome_usuario)
-        # CONTINUAR NO RESTO DA IMPLEMENTAÇÃO
+
+        if usuario is None:
+            raise PIException(nome_usuario)
     
-    def seguir(self, seguidor:str, seguido:str):
-        seguidor = self.__repositorio.buscar(seguidor)
-        seguido = self.__repositorio.buscar(seguido)
+        if usuario.is_ativo() == False:
+            raise PDException(nome_usuario)  
+
+        return usuario.get_tweets()
+
+    def seguir(self, nome_seguidor:str, nome_seguido:str):
+        seguidor = self.__repositorio.buscar(nome_seguidor)
+        seguido = self.__repositorio.buscar(nome_seguido)
         # CONTINUAR NO RESTO DA IMPLEMENTAÇÃO
+        if seguidor is None:
+            raise PIException(nome_seguidor)
+        if seguido is None:
+            raise PIException(nome_seguido)
     
+        if seguidor.is_ativo() == False:
+            raise PDException(nome_seguidor)
+        
+        if seguido.is_ativo() == False:
+            raise PDException(nome_seguido)
+
+        if seguido.get_usuario() == seguidor.get_usuario():
+            raise SIException(seguidor.get_usuario())
+        
+        seguido.add_seguidores(seguidor)
+        seguidor.add_seguidos(seguido)
+
     def numero_seguidores(self, nome_usuario:str):
         usuario = self.__repositorio.buscar(nome_usuario)
 

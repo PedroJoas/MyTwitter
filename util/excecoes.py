@@ -44,3 +44,21 @@ class PDException(Exception):
 
     def print_mensagem_erro(self):
         print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
+
+class PEException(Exception):
+    def __init__(self, nome_usuario, *args):
+        self.__nome_usuario = nome_usuario
+        self.__mensagem = "Usuário já cadastrado"
+        super().__init__(*args)
+
+    def print_mensagem_erro(self):
+        print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
+
+class SIException(Exception):
+    def __init__(self, nome_usuario, *args):
+        self.__nome_usuario = nome_usuario
+        self.__mensagem = "Seguidor inválido"
+        super().__init__(*args)
+
+    def print_mensagem_erro(self):
+        print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
