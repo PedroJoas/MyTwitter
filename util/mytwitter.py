@@ -37,23 +37,24 @@ class Perfil:
         self.__tweets = []
         self.__ativo = True
     
-    def add_seguidor(self, seguidor:Perfil):
+    def add_seguidor(self, seguidor:Perfil) -> None:
         self.__seguidores.append(seguidor)
         
-    def add_seguidos(self, seguidor: Perfil):
+    def add_seguidos(self, seguidor: Perfil) -> None:
         self.__seguidos.append(seguidor)
     
-    def add_tweet(self, mensagem:str):
+    def add_tweet(self, mensagem:str) -> None:
         tweet = Tweet(self.__usuario, mensagem)
         self.__tweets.append(tweet)
     
-    def get_tweets(self):
+    def get_tweets(self) -> list:
         return self.__tweets
 
-    def get_tweet(self, id_tweet):
+    def get_tweet(self, id_tweet) -> Tweet:
         for tweet in self.__tweets:
             if tweet.get_id() == id_tweet:
                 return tweet
+        return None
     
     def get_timeline(self):
         tweets_timelines = [perfil.get_tweets() for perfil in self.__seguidos] + self.__tweets
@@ -78,7 +79,7 @@ class Perfil:
     
     def get_numero_seguidos(self):
         return len(self.__seguidos)
-    
+     
 class PessoaFisica(Perfil):
     def __init__(self, usuario:str, cpf:str):
         super(usuario)
@@ -99,7 +100,7 @@ class RepositorioUsuarios:
     def __init__(self):
         self.__usuarios = []
     
-    def cadastrar(self, usuario: Perfil):
+    def cadastrar(self, usuario: Perfil) -> None:
         nome_usuario = usuario.get_usuario()
         usuario_bd = self.buscar(nome_usuario)
 
@@ -122,7 +123,12 @@ class RepositorioUsuarios:
             raise UNCException(nome_usuario)
         
         # CONTINUAR NO RESTO DA IMPLEMENTAÇÃO
-
+        # TIRAR DÚVIDA SOBRE ESSE MÉTODO EM ESPECÍFICO
+    
+    # PASSIVEL DE MUDANÇA (TIRAR DUVIDA SE ELE DEIXA FAZER DESSA FORMA)
+    def get_quantidade_usuarios(self):
+        return len(self.__usuarios)
+    
 class MyTwitter:
     def __init__(self):
         self.__repositorio = RepositorioUsuarios()
