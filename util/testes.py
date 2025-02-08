@@ -1,9 +1,16 @@
 from mytwitter import *
-import unittest
+import mytwitter # Isso ajuda a chamar a variavel global sem fazer uma copia
 from datetime import datetime
 from time import sleep
+
+import unittest
+from unittest.mock import patch
+
 class TestTweet(unittest.TestCase):
 
+    def setUp(self):
+        mytwitter.id_tweet = 0
+    
     def test_id(self):
         tweet = Tweet('lincolnsrocha', 'Tweetando guys')
         id = tweet.get_id()
@@ -24,6 +31,9 @@ class TestTweet(unittest.TestCase):
         self.assertIsInstance(tweet.get_data_postagem(), datetime, 'Erro no tipo da data de postagem')
 
 class TestPerfil(unittest.TestCase):
+    def setUp(self):
+        mytwitter.id_tweet = 0 # reinicia a variavel a cada teste
+
     def test_inicializa_seguidores(self):
         usuario = Perfil('lincolnsrocha')
         self.assertEqual(usuario.get_numero_seguidores(), 0, 'Erro na inicialização da variavel seguidores')
@@ -89,7 +99,7 @@ class TestPerfil(unittest.TestCase):
         timeline = usuario1.get_timeline()
         primeiro_tweet = timeline[0]
         segundo_tweet = timeline[1]
-        self.assertTrue(primeiro_tweet.get_data_postagem <= segundo_tweet.get_data_postagem, 'Erro na ordenação da timeline')
+        self.assertTrue(primeiro_tweet.get_data_postagem() <= segundo_tweet.get_data_postagem(), 'Erro na ordenação da timeline')
     
     def test_set_nome(self):
         usuario = Perfil('lincolnsrocha')
@@ -140,12 +150,32 @@ class TestRepositorioUsuarios(unittest.TestCase):
 
         self.assertIsNotNone(usuario_buscado, 'Erro ao buscar usuário')
 
-    def test_atualizar(self):
+    @patch("builtins.input", return_value="pedroflima")  # Simulando entrada do usuário
+    def test_atualizar_nome(self, mock_input):
         repositorio = RepositorioUsuarios()
         usuario = Perfil('lincolnsrocha')
         repositorio.cadastrar(usuario)
+        repositorio.atualizar('lincolnsrocha', 'nome')
+        self.assertEqual(usuario.get_usuario(), 'pedroflima', 'Erro ao atualizar o nome de usuario')
+    
+    @patch("builtins.input", return_value="129.791.191-86")  # Simulando entrada do usuário
+    def test_atualizar_cpf(self, mock_input):
+        repositorio = RepositorioUsuarios()
+        usuario = PessoaFisica('lincolnsrocha', '000.000.000-00')
+        repositorio.cadastrar(usuario)
+        repositorio.atualizar('lincolnsrocha', 'cpf')
+        self.assertEqual(usuario.get_cpf(), '129.791.191-86', 'Erro ao atualizar o cpf do usuario')
 
-        # CONTINUAR IMPLEMENTAÇÃO
+    @patch("builtins.input", return_value="31.565.104/0021-10")  # Simulando entrada do usuário
+    def test_atualizar_cnpj(self, mock_input):
+        repositorio = RepositorioUsuarios()
+        usuario = PessoaJuridica('pepsico', '00.000.000/0000-00')
+        repositorio.cadastrar(usuario)
+        repositorio.atualizar('pepsico', 'cnpj')
+        self.assertEqual(usuario.get_cnpj(), '31.565.104/0021-10', 'Erro ao atualizar o cnpj do usuario')
+
+
+
         
 class TestMyTwitter(unittest.TestCase):
     pass

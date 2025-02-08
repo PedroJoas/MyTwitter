@@ -62,3 +62,21 @@ class SIException(Exception):
 
     def print_mensagem_erro(self):
         print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
+
+class UIAAException(Exception):
+    def __init__(self, nome_usuario, *args):
+        self.__nome_usuario = nome_usuario
+        self.__mensagem = "Usuário impossibilitado de alterar atributo"
+        super().__init__(*args)
+
+    def print_mensagem_erro(self):
+        print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
+
+class AIException(Exception):
+    def __init__(self, nome_usuario, *args):
+        self.__nome_usuario = nome_usuario
+        self.__mensagem = "Atributo inexistente"
+        super().__init__(*args)
+
+    def print_mensagem_erro(self):
+        print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
