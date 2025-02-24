@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from excecoes import *
+from util.excecoes import *
 from itertools import chain
 
 id_tweet = 0  
@@ -33,11 +33,11 @@ class Tweet:
     
 class Perfil:
     def __init__(self, usuario:str) -> None:
-        self.__usuario = usuario
-        self.__seguidos = []
-        self.__seguidores = []
-        self.__tweets = []
-        self.__ativo = True
+        self.__usuario: str = usuario
+        self.__seguidos: list[Perfil] = []
+        self.__seguidores: list[Perfil] = []
+        self.__tweets: list[Tweet] = []
+        self.__ativo: bool = True
     
     def add_seguidor(self, seguidor:Perfil) -> None:
         self.__seguidores.append(seguidor)
@@ -49,7 +49,7 @@ class Perfil:
         tweet = Tweet(self.__usuario, mensagem)
         self.__tweets.append(tweet)
     
-    def get_tweets(self) -> list:
+    def get_tweets(self) -> list[Tweet]:
         return self.__tweets
 
     def get_tweet(self, id_tweet:int) -> Tweet:
@@ -58,7 +58,7 @@ class Perfil:
                 return tweet
         return None
     
-    def get_timeline(self) -> list:
+    def get_timeline(self) -> list[Tweet]:
         tweets_timelines = [perfil.get_tweets() for perfil in self.__seguidos] + [self.__tweets] # isso serve para não deixar os a lsita heterogenea, ou seja, ter valores e listas
         tweets_timelines = list(chain(*tweets_timelines))
         tweets_timelines.sort(key=lambda x: x.get_data_postagem())
@@ -106,7 +106,7 @@ class PessoaJuridica(Perfil):
         self.__cnpj = novo_cnpj
 class RepositorioUsuarios:
     def __init__(self) -> None:
-        self.__usuarios = []
+        self.__usuarios: list[Perfil] = []
     
     def cadastrar(self, usuario: Perfil) -> None:
         nome_usuario = usuario.get_usuario()
@@ -190,7 +190,7 @@ class MyTwitter:
         
         usuario.add_tweet(mensagem)
     
-    def timeline(self,nome_usuario:str) -> list:
+    def timeline(self,nome_usuario:str) -> list[Tweet]:
         usuario = self.__repositorio.buscar(nome_usuario)
         if usuario is None:
             raise PIException(nome_usuario)
@@ -242,7 +242,7 @@ class MyTwitter:
 
         return usuario.get_numero_seguidores()
     
-    def numero_seguidores(self, nome_usuario:str) -> int: 
+    def numero_seguidos(self, nome_usuario:str) -> int: 
         usuario = self.__repositorio.buscar(nome_usuario)
 
         if usuario is None:

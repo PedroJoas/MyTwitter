@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 class TestTweet(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self): # método que reinicializa a variável global
         mytwitter.id_tweet = 0
     
     def test_id(self):
@@ -175,10 +175,40 @@ class TestRepositorioUsuarios(unittest.TestCase):
         self.assertEqual(usuario.get_cnpj(), '31.565.104/0021-10', 'Erro ao atualizar o cnpj do usuario')
 
 
-
-        
 class TestMyTwitter(unittest.TestCase):
-    pass
+    
+    def testCriarPerfil(self):
+        mytwitter = MyTwitter()
+        usuario = Perfil('lincolnsrocha')
+        mytwitter.criar_perfil(usuario)
+        seguidores = mytwitter.numero_seguidores('lincolnsrocha')
+        self.assertEqual(seguidores, 0, 'Erro ao cadastrar usuário')
+    
+    def testCancelarPerfil(self):
+        mytwitter = MyTwitter()
+        usuario = Perfil('lincolnsrocha')
+        mytwitter.criar_perfil(usuario)
+        mytwitter.cancelar_perfil('lincolnsrocha')
+        
+        self.assertEqual(usuario.is_ativo(), False, 'Erro ao cancelar perfil')
+
+    def testSeguir(self):
+        mytwitter = MyTwitter()
+        usuario1 = Perfil('lincolnsrocha')
+        usuario2 = Perfil('pedrojoas')
+
+        mytwitter.criar_perfil(usuario1)
+        mytwitter.criar_perfil(usuario2)
+
+        mytwitter.seguir('lincolnsrocha', 'pedrojoas')
+
+        seguidores = mytwitter.numero_seguidores('pedrojoas')
+        seguindo = mytwitter.numero_seguidos('lincolnsrocha')
+
+        self.assertEqual(seguidores, 1, 'Erro ao adicionar seguidor')
+        self.assertEqual(seguindo, 1, 'Erro ao adicionar seguidos')
+    
+    
         
 
 if __name__ == '__main__':

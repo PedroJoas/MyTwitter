@@ -61,7 +61,7 @@ class SIException(Exception):
         super().__init__(*args)
 
     def print_mensagem_erro(self):
-        print("{}: \nNome Usuario @{}.".format(self.__mensagem, self.__nome_usuario))
+        print("{}: \nNome Usuario @{} tentou se seguir.".format(self.__mensagem, self.__nome_usuario))
 
 class UIAAException(Exception):
     def __init__(self, nome_usuario, *args):
