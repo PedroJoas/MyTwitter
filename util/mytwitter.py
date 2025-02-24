@@ -254,7 +254,4 @@ class MyTwitter:
         return usuario.get_numero_seguidos() 
 
 
-if __name__ == '__main__':
-    tweet = Tweet('pedro', 'olaa mundo')
-    print(tweet.get_id())
     

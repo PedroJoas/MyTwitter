@@ -2,7 +2,6 @@ import time
 import threading
 from util.mytwitter import *
 import random
-import traceback
 from util.excecoes import *
 
 lock = threading.Lock()
@@ -75,7 +74,7 @@ def rotina(mytwitter: MyTwitter, usuario: Perfil):
     # TWEETAR DNV
     time.sleep(intervalo_de_espera)
     try:
-        mytwitter.tweetar(nome_usuario, f'eu sou {nome_usuario} dnv')
+        mytwitter.tweetar(nome_usuario, retorna_tweet())
     except MFPException as mfpe:
         mfpe.print_mensagem_erro()
     except PIException as pie:

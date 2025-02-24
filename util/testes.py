@@ -1,5 +1,5 @@
-from mytwitter import *
-import mytwitter # Isso ajuda a chamar a variavel global sem fazer uma copia
+from util.mytwitter import *
+import util.mytwitter as mytwitter # Isso ajuda a chamar a variavel global sem fazer uma copia
 from datetime import datetime
 from time import sleep
 
