@@ -1,5 +1,10 @@
-from util.mytwitter import *
-import util.mytwitter as mytwitter # Isso ajuda a chamar a variavel global sem fazer uma copia
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from mytwitter import *
+import mytwitter as mytwitter # Isso ajuda a chamar a variavel global sem fazer uma copia
 from datetime import datetime
 from time import sleep
 
@@ -113,8 +118,7 @@ class TestPerfil(unittest.TestCase):
         usuario.set_ativo(False)
 
         self.assertEqual(usuario.is_ativo(), False, 'Erro ao trocar a variável ativo')
-    
-    
+     
 class TestePessoaFisica(unittest.TestCase):
 
     def test_get_cpf(self):
@@ -174,8 +178,8 @@ class TestRepositorioUsuarios(unittest.TestCase):
         repositorio.atualizar('pepsico', 'cnpj')
         self.assertEqual(usuario.get_cnpj(), '31.565.104/0021-10', 'Erro ao atualizar o cnpj do usuario')
 
-
 class TestMyTwitter(unittest.TestCase):
+
     
     def testCriarPerfil(self):
         mytwitter = MyTwitter()
@@ -207,9 +211,6 @@ class TestMyTwitter(unittest.TestCase):
 
         self.assertEqual(seguidores, 1, 'Erro ao adicionar seguidor')
         self.assertEqual(seguindo, 1, 'Erro ao adicionar seguidos')
-    
-    
-        
 
 if __name__ == '__main__':
     unittest.main()
